@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windrose AI — Decision Intelligence</title>
+<meta name="description" content="Windrose AI puts a team of specialist agents to work on your industry's highest-stakes decisions. Agents draft, your people decide, and every correction trains the next model.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2396d60b' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M12 2v20M2 12h20M12 12 5 5M12 12l7-7M12 12l7 7M12 12l-7 7'/%3E%3Ccircle cx='12' cy='12' r='2.6'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Windrose AI — Decision Intelligence">
+<meta property="og:description" content="Windrose AI puts a team of specialist agents to work on your industry's highest-stakes decisions. Agents draft, your people decide, and every correction trains the next model.">
+<meta name="twitter:card" content="summary_large_image">
+<style>*{margin:0}html{-webkit-text-size-adjust:100%}img,svg{display:block;max-width:100%}</style>
+</head>
+<body>
+
+<style>
+:root{
+  --bg:#0a0a0a; --card:#141414; --fg:#f5f5f5; --muted:#9e9e9e;
+  --border:#292929; --primary:#96d60b; --primary-fg:#0f0f0f;
+  --emerald:#16b863; --lime:#79f30d;
+  --max:72rem;
+}
+*{box-sizing:border-box}
+body,.wr{background:var(--bg);color:var(--fg);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+.wr{position:relative;isolation:isolate}
+h1,h2,h3{margin:0;letter-spacing:-.025em;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+a{color:inherit;text-decoration:none}
+ul{margin:0;padding:0;list-style:none}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:4px}
+
+/* ---------- backdrop ---------- */
+.backdrop{position:fixed;inset:0;z-index:-10;pointer-events:none}
+.backdrop .wash{position:absolute;inset:0;
+  background:radial-gradient(80rem 50rem at 50% -10%, rgb(150 214 11 / .12), transparent 60%)}
+.grid-lines{position:absolute;inset:0;
+  background-image:linear-gradient(rgb(150 214 11 / .06) 1px,transparent 1px),
+    linear-gradient(90deg,rgb(150 214 11 / .06) 1px,transparent 1px);
+  background-size:54px 54px;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% -5%,#000,transparent 72%);
+  mask-image:radial-gradient(120% 90% at 50% -5%,#000,transparent 72%)}
+.aurora{position:absolute;top:-10rem;left:50%;transform:translateX(-50%);
+  height:38rem;width:min(70rem,140vw);border-radius:50%;opacity:.6;
+  background:linear-gradient(115deg,rgb(150 214 11 / .5),rgb(22 184 99 / .45),rgb(121 243 13 / .38),rgb(150 214 11 / .5));
+  background-size:300% 300%;filter:blur(64px);animation:aurora 20s ease infinite}
+@keyframes aurora{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.mesh{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(55rem 42rem at 10% -12%, rgb(150 214 11 / .26), transparent 60%),
+             radial-gradient(46rem 40rem at 92% -8%, rgb(22 184 99 / .20), transparent 58%),
+             radial-gradient(50rem 44rem at 58% 6%, rgb(121 243 13 / .12), transparent 62%)}
+
+/* ---------- primitives ---------- */
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:1.5rem}
+.glass{position:relative;border-radius:1rem;
+  background:linear-gradient(180deg,rgb(20 20 20 / .75),rgb(20 20 20 / .4));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgb(150 214 11 / .08)}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(140deg,rgb(150 214 11 / .7),transparent 42%,rgb(22 184 99 / .6));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.glow{box-shadow:0 0 0 1px rgb(150 214 11 / .16),0 24px 70px -28px rgb(150 214 11 / .5)}
+.eyebrow{display:inline-flex;align-items:center;gap:.375rem;border-radius:999px;
+  border:1px solid rgb(150 214 11 / .3);background:rgb(150 214 11 / .1);
+  padding:.25rem .75rem;font-size:.75rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--primary)}
+.lede{color:var(--muted);max-width:42rem;font-size:1rem}
+.sec{padding-block:5rem;scroll-margin-top:5rem}
+.sec h2{font-size:clamp(1.75rem,4vw,2.25rem);font-weight:700;margin-top:1.25rem}
+.sec-alt{border-top:1px solid rgb(41 41 41 / .6);background:rgb(20 20 20 / .5)}
+.icon{width:1.25rem;height:1.25rem;stroke:currentColor;fill:none;
+  stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:.5rem;
+  padding:.625rem 1.125rem;font-size:.875rem;font-weight:600;cursor:pointer;
+  border:1px solid transparent;background:var(--primary);color:var(--primary-fg);
+  transition:filter .2s,transform .2s}
+.btn:hover{filter:brightness(1.08)}
+.btn-lg{padding:.8rem 1.4rem;font-size:.95rem}
+.btn-ghost{background:transparent;color:var(--fg);border-color:var(--border)}
+.btn-ghost:hover{border-color:rgb(150 214 11 / .5)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:30;border-bottom:1px solid rgb(41 41 41 / .6);
+  background:rgb(10 10 10 / .8);backdrop-filter:blur(12px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:1rem;gap:1rem}
+.brand{display:flex;align-items:center;gap:.625rem;font-size:1.125rem;font-weight:700;letter-spacing:-.02em}
+nav{display:none;gap:1.75rem;font-size:.875rem;color:var(--muted)}
+nav a:hover{color:var(--fg)}
+@media(min-width:900px){nav{display:flex}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden}
+.hero-grid{display:grid;gap:3rem;align-items:center;padding-block:3.5rem 5rem}
+@media(min-width:860px){.hero-grid{grid-template-columns:1fr 1fr;padding-top:5rem}}
+.hero h1{margin-top:1.5rem;font-size:clamp(2.25rem,6vw,3.75rem);font-weight:700;
+  line-height:1.03;text-shadow:0 0 34px rgb(150 214 11 / .3)}
+.grad{background-image:linear-gradient(100deg,var(--primary),var(--lime),var(--emerald));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{margin-top:1.5rem;max-width:36rem;font-size:1.125rem;color:var(--muted);line-height:1.65}
+.cta-row{margin-top:2.25rem;display:flex;flex-wrap:wrap;gap:.75rem}
+
+/* hero mock */
+.mock{width:100%;max-width:26rem;margin-inline:auto;position:relative;
+  animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.mock .halo{position:absolute;inset:-1.5rem;z-index:-1;border-radius:2.5rem;filter:blur(48px);
+  background:linear-gradient(45deg,rgb(150 214 11 / .3),rgb(22 184 99 / .2),rgb(121 243 13 / .2))}
+.mock .body{padding:1.25rem}
+.row{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.tag{border-radius:999px;background:rgb(150 214 11 / .1);color:var(--primary);
+  padding:.125rem .5rem;font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.k{font-size:.6875rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.bar{margin-top:.25rem;height:6px;width:100%;border-radius:999px;background:#242424;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--primary);
+  width:0;animation:grow 1.4s .3s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes grow{to{width:82%}}
+.ev{display:flex;gap:.5rem;font-size:.75rem;color:var(--muted);margin-top:.375rem}
+.ev .icon{width:.875rem;height:.875rem;color:var(--primary);margin-top:.15rem}
+.acts{margin-top:1.25rem;display:flex;gap:.5rem}
+.acts div{flex:1;text-align:center;border-radius:.375rem;padding:.5rem;font-size:.75rem;font-weight:600}
+
+/* marquee */
+.marq-band{border-block:1px solid rgb(41 41 41 / .6);background:rgb(20 20 20 / .4);padding-block:1rem}
+.marq-head{display:flex;align-items:center;gap:.75rem}
+.marq-label{flex:none;display:flex;align-items:center;gap:.375rem;font-size:.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--primary)}
+.marq-wrap{flex:1;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq{display:flex;gap:.5rem;width:max-content;animation:marq 30s linear infinite}
+@keyframes marq{to{transform:translateX(-50%)}}
+.chip{flex:none;display:flex;align-items:center;gap:.375rem;border-radius:999px;
+  border:1px solid rgb(41 41 41 / .7);background:var(--bg);padding:.375rem .75rem;font-size:.75rem}
+.chip .icon{width:.875rem;height:.875rem;color:var(--primary)}
+.chip b{font-weight:600}.chip span{color:var(--muted)}
+
+/* ---------- cards ---------- */
+.cards{display:grid;gap:1.25rem;margin-top:1rem}
+@media(min-width:700px){.cards{grid-template-columns:1fr 1fr}}
+.card{display:flex;flex-direction:column;height:100%;padding:1.5rem;
+  transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 28px 80px -30px rgb(150 214 11 / .6)}
+.ibox{display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;
+  border-radius:.75rem;background:rgb(150 214 11 / .1);color:var(--primary);transition:background .25s,color .25s}
+.card:hover .ibox{background:var(--primary);color:var(--primary-fg)}
+.ibox .icon{width:1.5rem;height:1.5rem}
+.card h3{margin-top:1rem;font-size:1.125rem;font-weight:700}
+.who{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--primary)}
+.card p{margin-top:.5rem;font-size:.875rem;color:var(--muted);line-height:1.6}
+.pills{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.375rem}
+.pill{border-radius:999px;border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .6);
+  padding:.125rem .625rem;font-size:.6875rem;color:var(--muted)}
+.pill-more{padding:.125rem .25rem;font-size:.6875rem;font-weight:600;color:var(--primary)}
+.subhead{margin-top:2.25rem;font-size:.75rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--muted)}
+
+/* wider industry map */
+.map{display:grid;gap:.75rem;margin-top:1.5rem}
+@media(min-width:640px){.map{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.map{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1200px){.map{grid-template-columns:repeat(4,1fr)}}
+.map .glass{padding:.875rem;height:100%;transition:transform .25s,box-shadow .25s}
+.map .glass:hover{transform:translateY(-2px);box-shadow:0 20px 50px -30px rgb(150 214 11 / .6)}
+.map .nm{font-size:.875rem;font-weight:600;line-height:1.3}
+.map .ex{margin-top:.125rem;font-size:.75rem;color:var(--muted);line-height:1.4}
+
+/* ---------- capability tabs ---------- */
+.caps{display:grid;gap:2rem;margin-top:2.5rem}
+@media(min-width:1000px){.caps{grid-template-columns:1.1fr 1fr}}
+.tablist{display:grid;gap:.625rem}
+@media(min-width:600px){.tablist{grid-template-columns:1fr 1fr}}
+.tab{border-radius:.75rem;border:1px solid rgb(41 41 41 / .7);background:var(--card);
+  padding:1rem;text-align:left;cursor:pointer;color:inherit;font:inherit;transition:.2s}
+.tab:hover{border-color:rgb(150 214 11 / .3)}
+.tab[aria-selected=true]{border-color:rgb(150 214 11 / .5);background:rgb(150 214 11 / .05)}
+.tab .ibox{width:2.25rem;height:2.25rem;border-radius:.5rem}
+.tab .ibox .icon{width:1.25rem;height:1.25rem}
+.tab[aria-selected=true] .ibox{background:var(--primary);color:var(--primary-fg)}
+.tab .t{margin-top:.75rem;font-size:.875rem;font-weight:600}
+.tab .e{margin-top:.25rem;font-size:.75rem;color:var(--muted)}
+.panel{position:relative;overflow:hidden;padding:1.75rem}
+.panel .blob{position:absolute;width:12rem;height:12rem;border-radius:50%;filter:blur(40px);pointer-events:none}
+.panel .b1{right:-4rem;top:-4rem;background:rgb(150 214 11 / .2)}
+.panel .b2{left:-4rem;bottom:-4rem;background:rgb(22 184 99 / .15)}
+.panel .inner{position:relative;animation:swap .5s ease}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel h3{margin-top:.5rem;font-size:1.25rem;font-weight:700}
+.panel .bd{margin-top:.625rem;font-size:.875rem;color:var(--muted);line-height:1.65}
+.panel ul{margin-top:1rem;display:grid;gap:.375rem}
+.panel li{display:flex;gap:.5rem;font-size:.875rem;color:var(--muted)}
+.panel li .icon{width:1rem;height:1rem;color:var(--primary);margin-top:.2rem}
+.viz{margin-top:1.5rem;border-radius:.75rem;border:1px solid rgb(41 41 41 / .6);
+  background:rgb(10 10 10 / .6);padding:1rem}
+.dots{margin-top:1.5rem;display:flex;justify-content:center;gap:.375rem}
+.dots button{height:6px;width:6px;border:0;border-radius:999px;background:var(--border);
+  cursor:pointer;padding:0;transition:.25s}
+.dots button[aria-current=true]{width:1.5rem;background:var(--primary)}
+
+/* viz internals */
+.v2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.v2 .a{display:flex;align-items:center;gap:.5rem;border-radius:.5rem;
+  border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .7);padding:.75rem;font-size:.75rem}
+.v2 .a .ibox{width:1.5rem;height:1.5rem;border-radius:.375rem}
+.v2 .a .icon{width:.875rem;height:.875rem}
+.v2 .a b{font-weight:500}
+.led{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--primary);
+  animation:pulse 1.8s ease-in-out infinite}
+.led.em{background:var(--emerald)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.bub{border-radius:1rem;padding:.5rem .75rem;font-size:.75rem;line-height:1.5}
+.bub.me{margin-left:auto;width:80%;background:var(--primary);color:var(--primary-fg);border-bottom-right-radius:.125rem}
+.bub.ai{width:92%;border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .7);
+  color:var(--muted);border-bottom-left-radius:.125rem;margin-top:.5rem}
+.bub.ai b{color:var(--fg);font-weight:500}
+.mini{display:flex;gap:.5rem;margin-top:.5rem}
+.mini .p1{border-radius:.375rem;background:rgb(150 214 11 / .1);color:var(--primary);
+  padding:.25rem .5rem;font-size:.625rem;font-weight:600}
+.mini .p2{border-radius:.375rem;border:1px solid var(--border);color:var(--muted);
+  padding:.25rem .5rem;font-size:.625rem}
+.ent{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.ent .src{display:grid;gap:.375rem}
+.ent .src div{border-radius:.375rem;border:1px solid rgb(41 41 41 / .7);
+  background:rgb(10 10 10 / .7);padding:.375rem .625rem;font-size:.6875rem;color:var(--muted)}
+.ent .out{border-radius:.75rem;border:1px solid rgb(150 214 11 / .4);background:rgb(150 214 11 / .05);
+  padding:.75rem;text-align:center}
+.ent .out .icon{width:1.25rem;height:1.25rem;color:var(--primary);margin-inline:auto;display:block}
+.ent .out .t{margin-top:.25rem;font-size:.75rem;font-weight:600}
+.ent .out .s{font-size:.625rem;color:var(--muted)}
+.rules{display:grid;gap:.375rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.6875rem}
+.rules div{display:flex;align-items:center;gap:.5rem;border-radius:.375rem;
+  border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .7);padding:.375rem .625rem}
+.rules b{color:var(--primary)}.rules s{color:var(--muted);text-decoration:none}
+.rules em{margin-left:auto;font-style:normal;font-weight:500}
+.bars{display:flex;align-items:flex-end;gap:.375rem;height:90px}
+.bars i{flex:1;border-radius:3px 3px 0 0;background:rgb(150 214 11 / .7)}
+.kpis{margin-top:.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.kpis div{border-radius:.375rem;border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .7);
+  padding:.375rem;text-align:center;font-size:.625rem;color:var(--muted)}
+.flow{display:flex;align-items:center;gap:.375rem;font-size:.6875rem;flex-wrap:wrap}
+.flow span{border-radius:.375rem;border:1px solid rgb(41 41 41 / .7);background:rgb(10 10 10 / .7);
+  padding:.375rem .625rem;font-weight:500;color:var(--muted)}
+.flow span.on{border-color:rgb(150 214 11 / .4);background:rgb(150 214 11 / .1);color:var(--primary)}
+.flow .icon{width:.75rem;height:.75rem;color:var(--muted)}
+
+/* ---------- compare table ---------- */
+.tscroll{overflow-x:auto;margin-top:2.5rem}
+table{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;
+  text-align:left;vertical-align:top;font-size:.875rem}
+th{padding:.75rem 1rem 1rem;vertical-align:bottom;font-size:.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+th.co{font-size:1rem;font-weight:700;text-transform:none;letter-spacing:-.01em;color:rgb(245 245 245 / .7)}
+th.di{border-radius:.75rem .75rem 0 0;background:rgb(150 214 11 / .1);color:var(--primary)}
+th.di .sm{display:block;margin-top:.125rem;font-size:.75rem;font-weight:500;
+  text-transform:none;letter-spacing:normal;color:rgb(150 214 11 / .8)}
+th.di .hd{display:flex;align-items:center;gap:.5rem}
+td{border-top:1px solid rgb(41 41 41 / .6);padding:1rem;color:var(--muted);vertical-align:top}
+td.dim{font-weight:600;color:var(--fg)}
+td.di{border-top-color:rgb(150 214 11 / .2);background:rgb(150 214 11 / .06);
+  font-weight:500;color:var(--fg)}
+td.di .hd{display:flex;gap:.5rem}
+td.di .icon{width:1rem;height:1rem;color:var(--primary);margin-top:.2rem}
+tr:last-child td.di{border-radius:0 0 .75rem .75rem}
+
+/* ---------- steps ---------- */
+.steps{display:grid;gap:1.5rem;margin-top:2.5rem}
+@media(min-width:820px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{height:100%;padding:1.75rem}
+.num{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;
+  border-radius:50%;background:rgb(150 214 11 / .15);color:var(--primary);
+  font-weight:700;font-size:.875rem;box-shadow:inset 0 0 0 1px rgb(150 214 11 / .3)}
+.step h3{margin-top:1rem;font-size:1.125rem;font-weight:600}
+.step p{margin-top:.5rem;font-size:.875rem;color:var(--muted);line-height:1.65}
+.outs{margin-top:2.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem}
+.outs .lbl{font-size:.875rem;font-weight:500}
+.outs .pill{background:var(--card);padding:.25rem .75rem;font-size:.75rem}
+
+/* ---------- spotlight ---------- */
+.spot{border-top:1px solid rgb(41 41 41 / .6);scroll-margin-top:4rem}
+.spot-grid{display:grid;gap:2.5rem;align-items:start;padding-block:5rem}
+@media(min-width:1000px){.spot-grid{grid-template-columns:1fr 1fr}}
+.spot h3.hl{margin-top:1.5rem;font-size:clamp(1.375rem,3vw,1.875rem);font-weight:700;line-height:1.2}
+.spot .blurb{margin-top:1rem;max-width:34rem;color:var(--muted);line-height:1.7}
+.outcomes{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.outcome{display:inline-flex;align-items:center;gap:.375rem;border-radius:999px;
+  border:1px solid rgb(150 214 11 / .25);background:rgb(150 214 11 / .05);
+  padding:.25rem .75rem;font-size:.75rem;font-weight:500}
+.outcome .icon{width:.875rem;height:.875rem;color:var(--primary)}
+.ships{padding:1.5rem;box-shadow:0 24px 70px -40px rgb(150 214 11 / .5)}
+.ships ul{margin-top:1rem;display:grid;gap:1rem}
+.ships li{display:flex;gap:.75rem}
+.ships .mk{display:flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;
+  flex:none;margin-top:.1rem;border-radius:.375rem;background:rgb(150 214 11 / .1);color:var(--primary)}
+.ships .mk .icon{width:.875rem;height:.875rem}
+.ships .nm{font-size:.875rem;font-weight:600;line-height:1.35}
+.ships .bd{margin-top:.125rem;font-size:.875rem;color:var(--muted);line-height:1.6}
+
+/* ---------- trust ---------- */
+.trust{display:grid;gap:1.5rem;margin-top:2.5rem}
+@media(min-width:640px){.trust{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.trust{grid-template-columns:repeat(4,1fr)}}
+.trust h3{font-size:.875rem;font-weight:600}
+.trust p{margin-top:.5rem;font-size:.875rem;color:var(--muted);line-height:1.65}
+
+/* ---------- faq ---------- */
+.faq{max-width:48rem;margin-inline:auto}
+.faq h2{text-align:center}
+.acc{margin-top:2rem;border-radius:1rem;overflow:hidden}
+.acc .qa+.qa{border-top:1px solid rgb(41 41 41 / .6)}
+.acc button{display:flex;width:100%;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem 1.25rem;text-align:left;background:none;border:0;color:inherit;
+  font:inherit;font-size:.875rem;font-weight:600;cursor:pointer}
+.acc .chev{transition:transform .3s;color:var(--muted)}
+.acc button[aria-expanded=true] .chev{transform:rotate(180deg)}
+.acc .a{display:grid;grid-template-rows:0fr;opacity:0;transition:all .3s}
+.acc .a.open{grid-template-rows:1fr;opacity:1}
+.acc .a>div{overflow:hidden}
+.acc .a p{padding:0 1.25rem 1rem;font-size:.875rem;color:var(--muted);line-height:1.7}
+
+/* ---------- closing ---------- */
+.close{position:relative;overflow:hidden;border-top:1px solid rgb(41 41 41 / .6);text-align:center}
+.close .inner{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding-block:6rem}
+.close h2{font-size:clamp(1.75rem,4vw,2.25rem);font-weight:700}
+.close p{max-width:36rem;color:var(--muted)}
+.close .logo{filter:drop-shadow(0 0 28px rgb(150 214 11 / .6))}
+footer{border-top:1px solid rgb(41 41 41 / .6)}
+footer .wrap{display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  gap:.5rem;padding-block:1.5rem;font-size:.75rem;color:var(--muted);text-align:center}
+@media(min-width:640px){footer .wrap{flex-direction:row}}
+
+@media (prefers-reduced-motion:reduce){
+  .aurora,.mock,.marq,.bar i,.led,.panel .inner{animation:none!important}
+  .bar i{width:82%}
+  .reveal{opacity:1!important;transform:none!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12 5 5M12 12l7-7M12 12l7 7M12 12l-7 7" stroke-width="1.4"/><circle cx="12" cy="12" r="2.6" stroke-width="1.4"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.2"/><path d="M9 13h.01M15 13h.01M9.5 17h5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3V6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3z"/><path d="M8 9h8M8 12.5h5"/></symbol>
+  <symbol id="i-net" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.6"/><path d="M7.1 7.2 15.6 11M7.1 16.8 15.6 13"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="1.5"/><rect x="14" y="15" width="7" height="6" rx="1.5"/><path d="M6.5 9v6a3 3 0 0 0 3 3H14"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="10" y="10" width="4" height="4" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 4.5 5.8V11c0 5 3.2 8.8 7.5 10.5C16.3 19.8 19.5 16 19.5 11V5.8z"/><path d="m9.2 11.8 2 2 3.6-3.8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c.6 4.4 2 5.9 6.5 6.5C14 10.1 12.6 11.6 12 16c-.6-4.4-2-5.9-6.5-6.5C10 8.9 11.4 7.4 12 3Z"/><path d="M18.5 15.5c.3 1.9.9 2.5 2.8 2.8-1.9.3-2.5.9-2.8 2.8-.3-1.9-.9-2.5-2.8-2.8 1.9-.3 2.5-.9 2.8-2.8Z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.4 6.2a5 5 0 0 0-8.4-1.7 5 5 0 0 0-8.4 1.7c-1 2.8.6 5.4 2.6 7.4L12 20l5.8-6.4c2-2 3.6-4.6 2.6-7.4Z"/><path d="M3.8 12h3.4L9 9.5l2 5 1.8-3H16"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 21h18"/></symbol>
+  <symbol id="i-umb" viewBox="0 0 24 24"><path d="M12 3v1.5M2.5 12a9.5 9.5 0 0 1 19 0z"/><path d="M12 12v6.5a2.2 2.2 0 0 1-4.4 0"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3.5V21M7 21h10M4 8.5h16M4 8.5 1.5 15h5zM20 8.5 17.5 15h5z"/><path d="M1.5 15a2.5 2.5 0 0 0 5 0M17.5 15a2.5 2.5 0 0 0 5 0"/></symbol>
+</defs>
+</svg>
+
+<div class="wr">
+<div class="backdrop" aria-hidden="true">
+  <div class="wash"></div><div class="grid-lines"></div><div class="aurora"></div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><svg class="icon" style="width:2rem;height:2rem;color:var(--primary)"><use href="#i-logo"/></svg>Windrose AI</div>
+    <nav>
+      <a href="#industries">Industries</a>
+      <a href="#capabilities">Platform</a>
+      <a href="#difference">Why DI</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn" href="#contact">Request a demo</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="mesh" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-spark"/></svg>AI decision intelligence</span>
+      <h1>AI agents that decide,<br>with your experts <span class="grad">in command.</span></h1>
+      <p class="sub">Windrose AI puts a team of specialist agents to work on your industry's highest-stakes decisions — health claims, financial-crime alerts, insurance losses, back-office adjudication. Agents draft, a copilot assists, your people decide, and every correction trains the next model.</p>
+      <div class="cta-row">
+        <a class="btn btn-lg" href="#contact">Request a demo <svg class="icon" style="width:1rem;height:1rem"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-lg btn-ghost" href="#industries">Explore by industry</a>
+      </div>
+      <p class="lede" style="margin-top:1.5rem;font-size:.875rem">Governed end to end — every determination has evidence, an owner, and a trail.</p>
+    </div>
+
+    <div class="mock">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="glass glow body">
+        <div class="row">
+          <span style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:500;color:var(--muted)">
+            <svg class="icon" style="width:1rem;height:1rem;color:var(--primary)"><use href="#i-bot"/></svg>Claims Triage Agent</span>
+          <span class="tag">Proposal</span>
+        </div>
+        <div style="margin-top:1rem">
+          <div class="k">Recommended disposition</div>
+          <div style="margin-top:.25rem;font-size:1rem;font-weight:600">Deny — duplicate submission</div>
+        </div>
+        <div style="margin-top:.75rem">
+          <div class="row" style="font-size:.6875rem;color:var(--muted)"><span>Confidence</span><span style="font-weight:500;color:var(--fg)">High</span></div>
+          <div class="bar"><i></i></div>
+        </div>
+        <div style="margin-top:1rem">
+          <div class="ev"><svg class="icon"><use href="#i-check"/></svg>Matches a prior claim on policy + invoice</div>
+          <div class="ev"><svg class="icon"><use href="#i-check"/></svg>Same claimant and amount as the earlier submission</div>
+        </div>
+        <div class="acts">
+          <div style="background:var(--primary);color:var(--primary-fg)">Approve</div>
+          <div style="border:1px solid var(--border)">Adjust</div>
+        </div>
+        <div style="margin-top:.75rem;display:flex;align-items:center;gap:.375rem;font-size:.625rem;color:var(--muted)">
+          <svg class="icon" style="width:.75rem;height:.75rem"><use href="#i-shield"/></svg>Logged with evidence · you decide
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="marq-band">
+    <div class="wrap marq-head">
+      <span class="marq-label"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-spark"/></svg>Agentic AI at work</span>
+      <div class="marq-wrap"><div class="marq" id="marq"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIES ============ -->
+<section id="industries" class="sec wrap">
+  <div class="reveal">
+    <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-spark"/></svg>Solutions by industry</span>
+    <h2>Decision intelligence for every industry</h2>
+    <p class="lede" style="margin-top:.75rem">If a team reads evidence, applies a policy and makes a call — at volume and under scrutiny — Windrose runs it. Four domains ship deep today; the same governed platform adapts to any data-driven decision queue.</p>
+  </div>
+  <div class="subhead">Flagship solutions — built deep</div>
+  <div class="cards" id="industry-cards"></div>
+
+  <div style="margin-top:3.5rem">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.25rem 1rem">
+      <h3 style="font-size:1.25rem;font-weight:700">…and any other decision that runs on data</h3>
+      <span style="font-size:.875rem;color:var(--muted)">Same platform · same governance</span>
+    </div>
+    <div class="map" id="industry-map"></div>
+    <p class="lede" style="margin-top:1.75rem;font-size:.875rem">
+      <b style="color:var(--fg)">Don't see yours?</b> Windrose isn't built around an industry — it's built around the decision. New verticals install as capability packs onto the same core, so any judgment-heavy queue is a fit.
+    </p>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section id="capabilities" class="sec wrap">
+  <div class="reveal">
+    <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-cpu"/></svg>One platform under every industry</span>
+    <h2>Every solution runs on the same AI operation.</h2>
+    <p class="lede" style="margin-top:.75rem">The industry packs above aren't separate products — they're the same coordinated set of AI capabilities that read, reason, decide and learn, with governance running through all of it. Learn the platform once; reuse it in every queue.</p>
+  </div>
+  <div class="caps">
+    <div class="tablist" id="tablist" role="tablist" aria-label="Platform capabilities"></div>
+    <div class="glass glow panel" id="panel">
+      <div class="blob b1" aria-hidden="true"></div><div class="blob b2" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+</section>
+
+<!-- ============ WHY DI ============ -->
+<section id="difference" class="sec-alt" style="border-bottom:0">
+  <div class="wrap sec" id="difference-inner">
+    <div class="reveal">
+      <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-spark"/></svg>Why decision intelligence</span>
+      <h2>A different category from BI and AI</h2>
+      <p class="lede" style="margin-top:.75rem">Business intelligence tells you what happened. AI models predict what might. Decision intelligence makes the call — governed, evidenced and accountable — and learns from every one.</p>
+    </div>
+    <div class="tscroll reveal">
+      <table>
+        <thead><tr>
+          <th style="width:22%">By this measure</th>
+          <th class="co">Traditional BI</th>
+          <th class="co">AI / ML models</th>
+          <th class="co di"><span class="hd"><svg class="icon" style="width:1rem;height:1rem"><use href="#i-logo"/></svg>Windrose</span><span class="sm">Decision Intelligence</span></th>
+        </tr></thead>
+        <tbody id="compare"></tbody>
+      </table>
+    </div>
+    <p class="lede" style="margin-top:1.25rem;font-size:.875rem">Keep your dashboards and your models — Windrose adds a governed decision layer on top, so the insight actually becomes an auditable action.</p>
+  </div>
+</section>
+
+<!-- ============ HOW ============ -->
+<section id="how" class="sec-alt">
+  <div class="wrap sec">
+    <div class="reveal">
+      <h2 style="margin-top:0">How every decision flows</h2>
+      <p class="lede" style="margin-top:.75rem">Three steps, every time — so the work moves quickly and the accountability never leaves your people.</p>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="outs">
+      <span class="lbl">What changes for your team:</span>
+      <span class="pill">Shorter backlogs</span><span class="pill">Consistent determinations</span>
+      <span class="pill">Confident audits</span><span class="pill">Lower cost per decision</span>
+      <span class="pill">Experts on judgment, not busywork</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPOTLIGHTS ============ -->
+<div id="spotlights"></div>
+<div style="border-top:1px solid rgb(41 41 41 / .6)">
+  <p style="max-width:36rem;margin-inline:auto;padding:3rem 1.5rem;text-align:center;font-size:.875rem;color:var(--muted)">
+    <b style="color:var(--fg)">…and your operation next.</b> New solutions install onto the same governed platform — your teams learn the tool once and reuse it everywhere.
+  </p>
+</div>
+
+<!-- ============ TRUST ============ -->
+<section class="sec-alt">
+  <div class="wrap sec">
+    <div class="reveal">
+      <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-shield"/></svg>Built for scrutiny</span>
+      <h2>Governance isn't a feature. It's the foundation.</h2>
+      <p class="lede" style="margin-top:.75rem">The controls a regulated buyer needs are how the whole thing works — so security and compliance are on your side from day one.</p>
+    </div>
+    <div class="trust" id="trust"></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="sec wrap faq">
+  <h2>Questions, answered</h2>
+  <div class="glass acc" id="acc"></div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section id="contact" class="close" style="scroll-margin-top:5rem">
+  <div class="mesh" style="opacity:.8" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <svg class="icon logo" style="width:3rem;height:3rem;color:var(--primary)"><use href="#i-logo"/></svg>
+    <h2>Many directions. One confident, auditable bearing.</h2>
+    <p>Put an AI operation to work on the calls that matter — with your experts in command and a record that speaks for itself when anyone asks.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Windrose AI — Decision Intelligence platform</span>
+    <span>AI proposes. People decide. The platform remembers.</span>
+  </div>
+</footer>
+</div>
+
+<script>
+const AGENTS=[["Claims Triage Agent","reads each case and drafts the disposition"],["Analytics Copilot","answers data questions in plain language"],["Governance & Compliance Agent","checks every action against policy"],["Data Onboarding Agent","profiles new data and gets it decision-ready"],["Reporting Designer Agent","builds the dashboards your team needs"],["Model Ops Agent","trains, evaluates and promotes your models"]];
+
+const INDUSTRIES=[
+{id:"healthcare",name:"Healthcare",who:"Payers, providers & pharmacy",icon:"i-heart",
+ tag:"Claims, care and revenue decisions — the reasoning attached to every call.",
+ headline:"Adjudicate, appeal and recover — without leaving revenue or defensibility behind.",
+ blurb:"From prior authorization to payment integrity, specialist agents do the reading and your clinicians and analysts make the call — with the evidence and the rules on the record.",
+ outcomes:["Faster prior-auth turnaround","Higher clean-claim rates","Audit-ready determinations"],
+ useCases:[["Claims Adjudication & Appeals","Resolve denials, appeals and prior authorizations faster."],["Provider Revenue Cycle","Lift clean-claim rates and recover the revenue you've earned."],["Payment Integrity (FWA / SIU)","Surface suspect claims and providers, then close each case defensibly."],["Care Management","Enroll, track and bill chronic-care and remote-monitoring programs."],["Pharmacy Benefits (PBM)","Speed authorization turnaround while protecting safety and rebates."],["Post-Acute Care","Run episodes and assessments cleanly and stay ahead of readmissions."]]},
+{id:"banking",name:"Banking & Financial Services",who:"Fraud, AML, disputes & lending",icon:"i-bank",
+ tag:"Monitor, adjudicate and file with a decision you can stand behind.",
+ headline:"Reach the filing, the dispute call and the credit decision — and prove how you got there.",
+ blurb:"Route alerts and cases to the right specialist, cut false positives, and reach determinations a regulator can follow — every step logged with the evidence it stood on.",
+ outcomes:["Fewer false positives","Consistent filing decisions","Regulator-ready trails"],
+ useCases:[["Financial Crime & AML","Monitor transactions, screen sanctions and reach defensible filing decisions."],["Card Disputes & Chargebacks","Adjudicate disputes and representment with the evidence attached."],["Credit Bureau Disputes","Investigate and resolve consumer disputes inside the regulatory clock."],["Mortgage Loss Mitigation","Work borrowers through options consistently and on time."],["Underwriting Intake","Turn messy application packages into a clean, ranked decision."]]},
+{id:"insurance",name:"Insurance",who:"P&C, specialty & warranty",icon:"i-umb",
+ tag:"Triage and resolve claims across lines with a consistent, auditable call.",
+ headline:"Triage severity, catch leakage and settle — the same defensible way, every claim.",
+ blurb:"Score severity on arrival, route each claim to the right desk, and settle with the coverage read and the reasoning captured — so outcomes hold up on review.",
+ outcomes:["Less claims leakage","Right-desk routing","Consistent settlements"],
+ useCases:[["Auto & Trucking Claims","Triage severity, spot leakage and route each claim to the right desk."],["Workers' Compensation","Manage claims and reserves with the reasoning captured end to end."],["Construction & Property","Handle defect and property claims with the evidence in one place."],["Warranty Claims","Validate coverage and settle warranty claims at scale."]]},
+{id:"risk-ops",name:"Risk, Trust & Operations",who:"Back-office adjudication queues",icon:"i-scale",
+ tag:"The judgment-heavy back-office queues, standardized and sped up.",
+ headline:"Standardize the judgment calls buried in operations — and clear the backlog.",
+ blurb:"Invoice audit, screening, appeals and notices are all the same shape: read the evidence, apply the policy, decide. Windrose runs each as a governed queue your team can trust.",
+ outcomes:["Shorter backlogs","Policy applied consistently","Every call defensible"],
+ useCases:[["AP Invoice Audit","Catch duplicate, non-compliant and over-billed invoices before they pay."],["Background & Seller Vetting","Adjudicate screening and marketplace-vetting cases against policy."],["Trust & Safety Appeals","Review enforcement appeals quickly and consistently."],["Tax Notice Resolution","Classify notices, draft the response and track each to closure."]]}];
+
+const MORE=[["Healthcare & Life Sciences","Prior auth, claims, payment integrity"],["Banking & Capital Markets","AML alerts, disputes, credit decisions"],["Insurance","Claim triage, leakage, settlements"],["Government & Public Sector","Benefits, eligibility, case adjudication"],["Manufacturing & Industrial","Quality dispositions, MRB, warranty"],["Retail & Consumer Goods","Returns, chargebacks, seller vetting"],["Energy & Utilities","Inspections, outage triage, safety cases"],["Telecom & Media","Fraud, provisioning, content appeals"],["Transportation & Logistics","Freight claims, safety, exceptions"],["Pharma & Biotech","Pharmacovigilance, device complaints"],["Fintech & Payments","Onboarding/KYC, disputes, risk"],["Real Estate & Mortgage","Underwriting intake, loss mitigation"],["Legal & Compliance","Contract review, sanctions, filings"],["Education","Admissions, aid, integrity cases"],["Travel & Hospitality","Refunds, chargebacks, fraud"],["Automotive","Warranty, recalls, defect claims"],["Aerospace & Defense","Nonconformance, compliance, audits"],["Agriculture & Food","Inspections, quality, traceability"],["Construction & Engineering","Defect claims, safety, change orders"],["Technology & Trust/Safety","Abuse review, appeals, moderation"]];
+
+const CAPS=[
+{key:"agents",icon:"i-bot",eyebrow:"Agentic workforce",title:"A team of specialist AI agents",
+ body:"Purpose-built agents do the reading and draft the work — triaging cases, answering data questions, designing dashboards, training models, watching for drift. They propose; they never act on their own.",
+ points:["Draft dispositions with cited evidence","Route work to the right specialist","Open proposals, never silent writes"]},
+{key:"copilot",icon:"i-chat",eyebrow:"Conversational",title:"A copilot that knows your role",
+ body:"Ask in plain language and get an answer grounded in your governed data and your permissions. Need a change made? The copilot proposes it for a human to approve — it can't do anything you couldn't.",
+ points:["Grounded in your metrics, not guesses","Aware of what you're allowed to see","Turns a question into a governed action"]},
+{key:"entity",icon:"i-net",eyebrow:"Data unification",title:"Entity resolution",
+ body:"The same person or party shows up across systems under different identifiers. Windrose unifies those fragmented records into one resolved entity — so decisions run on the full picture, not a single row.",
+ points:["Deterministic + probabilistic matching","Ambiguous merges reviewed by a human","Decide on total exposure, not one record"]},
+{key:"decisions",icon:"i-flow",eyebrow:"Codified policy",title:"No-code decision automation",
+ body:"Turn your operating policy into decision tables anyone can read. Apply them consistently across thousands of cases — and every table change is itself reviewed before it goes live.",
+ points:["Author rules without engineering","Consistent outcomes, every case","Change control on the logic itself"]},
+{key:"analytics",icon:"i-chart",eyebrow:"Governed insight",title:"Analytics your team can trust",
+ body:"Business metrics are defined once, reviewed, and reused everywhere — so dashboards agree. Click any bar, slice or row and the whole board filters to match.",
+ points:["One trusted definition per metric","Cross-filter the entire board","From a chart straight into a work queue"]},
+{key:"ml",icon:"i-cpu",eyebrow:"Own your models",title:"Machine learning, built in",
+ body:"Train candidate models on your own decisions, evaluate them against your benchmarks, and promote the winner through an approval gate. Repetitive calls move off expensive AI and onto models you own.",
+ points:["No-code pipelines over a rich algorithm catalog","Evaluated before anything ships","Cost per decision trends down"]}];
+
+const COMPARE=[
+["What it delivers","Dashboards & reports","Predictions & scores","A governed decision + its reasoning"],
+["Unit of work","A metric or a chart","A model output","A case, handled end to end"],
+["Who acts on it","An analyst reads, then acts by hand","A person interprets the score","Agents draft, your expert approves, the action is taken"],
+["Evidence & audit","Numbers, no per-decision trail","Often a black box","Every decision has evidence, an owner and a trail"],
+["Governance","Access control","Model governance (sometimes)","Four-eyes, row-level isolation, policy-as-code, immutable audit"],
+["Learning loop","Static until rebuilt","Retrained offline","Every human correction trains the next model"],
+["Consistency","Depends on the analyst","Consistent scores","Consistent, policy-driven determinations"],
+["Time to value","Build the dashboards","Build & train the models","Install a solution pack for the decision"]];
+
+const STEPS=[["AI does the reading","Agents gather the evidence, check it against your rules, and draft a clear recommendation with the reasoning laid out."],["Your expert decides","Approve, adjust or override. People stay accountable for every outcome — nothing acts on its own."],["It learns and improves","Each decision becomes training data. Quality climbs, the routine gets automated, and your team is freed for the hard calls."]];
+
+const TRUST=[["Your data stays yours","Cleanly isolated for your organization — never mingled, never shared."],["Least-privilege access","Everyone sees and does exactly what their role allows, and nothing more."],["A second set of eyes","The changes that matter most require another reviewer to sign off before they go live."],["A tamper-evident trail","Who decided what, when, and on what evidence — captured for every action, ready for any review."]];
+
+const FAQ=[
+["What is decision intelligence?","It's the discipline — and this platform — of turning your data, your policy and AI into governed, auditable decisions at scale. Not a dashboard that reports the past or a model that predicts it: a system that makes the call, attaches the evidence, and keeps a person accountable for every one."],
+["What exactly is “agentic AI”?","A chatbot answers a question; a model returns a score. An agentic AI takes on multi-step work: it reads the evidence, checks it against your rules, uses tools to gather what it needs, and drafts a decision or action — then hands it to a person to approve. Windrose runs a team of these specialist agents (triage, analytics, governance and more), each scoped to what it's allowed to see and do. They propose; they never act on their own."],
+["How is this different from BI or analytics?","BI tells you what happened and leaves the decision to you. Windrose is built around the decision itself: it reads the case, drafts the call with cited evidence, records who decided and why, and learns from every correction — end to end, under governance. Dashboards are one capability inside it, not the point."],
+["How is it different from just using an LLM or an ML model?","An LLM or model gives you an output; you still have to ground it, govern it, route the work, capture the audit trail and close the loop. Windrose is that surrounding system — grounding on your governed data, four-eyes approval, immutable audit, and a correction-to-retrain loop — with the models plugged in where they help."],
+["Does the AI ever act on its own?","No. Agents draft recommendations and the copilot proposes changes, but a person approves, adjusts or rejects every outcome. Sensitive changes require a second reviewer (four-eyes) before they go live."],
+["Do the agents replace my team?","No — they do the reading and drafting so your experts spend their time on judgment, not busywork. People stay accountable for every determination; the routine gets automated and the hard calls get more attention."],
+["How do you prevent hallucinations and wrong decisions?","Answers and drafts are grounded in your governed data and cite the evidence they used. Nothing is a silent write — every decision is gated by a human, sensitive ones by a second reviewer. Models are evaluated against your benchmarks before they're ever promoted, and every action is logged for review."],
+["Is our data secure and compliant?","Your data is cleanly isolated for your organization (row-level security), everyone operates under least-privilege access, the changes that matter need a second set of eyes, and every action lands in a tamper-evident trail. You can bring your own identity provider, secrets store and cloud."],
+["Will it work with our existing data, models and stack?","Bring data as files or from your sources; it's profiled on arrival and queryable quickly. Define metrics and models on top, or plug in models you already own — you keep your system of record."],
+["How quickly can we get value?","Start from a solution pack shaped for your domain — the data model, metrics, work queues and expertise already in place — instead of a blank slate. New verticals install onto the same governed core."],
+["How do you keep AI costs from spiraling?","Work is routed across model tiers, and repetitive decisions migrate onto smaller models you own — so scaling volume doesn't mean scaling the bill."]];
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ic=(id,sz)=>`<svg class="icon"${sz?` style="width:${sz};height:${sz}"`:""}><use href="#${id}"/></svg>`;
+const $=s=>document.querySelector(s);
+
+/* marquee (doubled for a seamless loop) */
+$("#marq").innerHTML=[...AGENTS,...AGENTS].map(([n,r])=>
+  `<span class="chip">${ic("i-bot")}<b>${esc(n)}</b><span>— ${esc(r)}</span></span>`).join("");
+
+/* industry cards */
+$("#industry-cards").innerHTML=INDUSTRIES.map(d=>`
+  <div class="reveal"><a href="#ind-${d.id}" class="glass card">
+    <div class="row" style="align-items:flex-start">
+      <span class="ibox">${ic(d.icon)}</span>${ic("i-arrow","1rem")}
+    </div>
+    <h3>${esc(d.name)}</h3><div class="who">${esc(d.who)}</div>
+    <p>${esc(d.tag)}</p>
+    <div class="pills">${d.useCases.slice(0,3).map(u=>`<span class="pill">${esc(u[0])}</span>`).join("")}
+      ${d.useCases.length>3?`<span class="pill-more">+${d.useCases.length-3} more</span>`:""}</div>
+  </a></div>`).join("");
+
+$("#industry-map").innerHTML=MORE.map(([n,e])=>`
+  <div class="reveal"><div class="glass"><div class="nm">${esc(n)}</div><div class="ex">${esc(e)}</div></div></div>`).join("");
+
+/* compare table */
+$("#compare").innerHTML=COMPARE.map(([d,bi,ai,di])=>`
+  <tr><td class="dim">${esc(d)}</td><td>${esc(bi)}</td><td>${esc(ai)}</td>
+  <td class="di"><span class="hd">${ic("i-check")}<span>${esc(di)}</span></span></td></tr>`).join("");
+
+/* steps */
+$("#steps").innerHTML=STEPS.map(([t,b],i)=>`
+  <div class="reveal"><div class="glass step"><div class="num">${i+1}</div>
+  <h3>${esc(t)}</h3><p>${esc(b)}</p></div></div>`).join("");
+
+/* trust */
+$("#trust").innerHTML=TRUST.map(([t,b])=>`
+  <div class="reveal"><h3>${esc(t)}</h3><p>${esc(b)}</p></div>`).join("");
+
+/* spotlights */
+$("#spotlights").innerHTML=INDUSTRIES.map((d,i)=>`
+  <section id="ind-${d.id}" class="spot${i%2?" sec-alt":""}">
+    <div class="wrap spot-grid">
+      <div class="reveal">
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <span class="ibox">${ic(d.icon)}</span>
+          <div><div class="who">${esc(d.who)}</div>
+          <div style="font-size:1.125rem;font-weight:700;letter-spacing:-.02em">${esc(d.name)}</div></div>
+        </div>
+        <h3 class="hl">${esc(d.headline)}</h3>
+        <p class="blurb">${esc(d.blurb)}</p>
+        <div class="outcomes">${d.outcomes.map(o=>`<span class="outcome">${ic("i-check")}${esc(o)}</span>`).join("")}</div>
+      </div>
+      <div class="reveal"><div class="glass ships">
+        <div class="who">Solutions that ship</div>
+        <ul>${d.useCases.map(([n,b])=>`<li><span class="mk">${ic("i-check")}</span>
+          <div><div class="nm">${esc(n)}</div><div class="bd">${esc(b)}</div></div></li>`).join("")}</ul>
+      </div></div>
+    </div>
+  </section>`).join("");
+
+/* capability tabs */
+function viz(k){
+  if(k==="agents")return `<div class="v2">${["Triage","Analytics","ML Engineer","Governance"].map((a,i)=>
+    `<div class="a"><span class="ibox">${ic("i-bot")}</span><b>${a}</b><span class="led${i%2?"":" em"}"></span></div>`).join("")}</div>`;
+  if(k==="copilot")return `<div class="bub me">Which denials spiked this week, and why?</div>
+    <div class="bub ai">Timely-filing denials rose on two payers. <b>Draft a rule to auto-flag them?</b></div>
+    <div class="mini"><span class="p1">Propose rule</span><span class="p2">Open worklist</span></div>`;
+  if(k==="entity")return `<div class="ent"><div class="src">
+      <div>V. Petrov · sys A</div><div>Viktor P. · sys B</div><div>Petrov, V · sys C</div></div>
+      ${ic("i-arrow","1rem")}
+      <div class="out">${ic("i-net")}<div class="t">One resolved entity</div><div class="s">full exposure</div></div></div>`;
+  if(k==="decisions")return `<div class="rules">
+      <div><b>IF</b><s>exposure ≥ threshold</s><em>→ escalate</em></div>
+      <div><b>IF</b><s>duplicate = true</s><em>→ deny</em></div>
+      <div><b>ELSE</b><s></s><em>→ standard review</em></div></div>`;
+  if(k==="analytics")return `<div class="bars">${[45,70,40,90,60,80].map(h=>`<i style="height:${h}%"></i>`).join("")}</div>
+      <div class="kpis"><div>Denial rate</div><div>Clean-claim</div><div>A/R days</div></div>`;
+  return `<div class="flow"><span>Train</span>${ic("i-arrow",".75rem")}<span>Evaluate</span>${ic("i-arrow",".75rem")}<span class="on">Promote</span></div>`;
+}
+
+let tab=0,auto=true;
+$("#tablist").innerHTML=CAPS.map((c,i)=>`
+  <button class="tab" role="tab" data-i="${i}" aria-selected="${i===0}">
+    <span class="ibox">${ic(c.icon)}</span>
+    <div class="t">${esc(c.title)}</div><div class="e">${esc(c.eyebrow)}</div>
+  </button>`).join("");
+$("#dots").innerHTML=CAPS.map((c,i)=>
+  `<button data-i="${i}" aria-current="${i===0}" aria-label="${esc(c.title)}"></button>`).join("");
+
+function render(){
+  const c=CAPS[tab];
+  const p=$("#panel");
+  p.querySelector(".inner")?.remove();
+  p.insertAdjacentHTML("beforeend",`<div class="inner">
+    <div class="who">${esc(c.eyebrow)}</div>
+    <h3>${esc(c.title)}</h3>
+    <p class="bd">${esc(c.body)}</p>
+    <ul>${c.points.map(x=>`<li>${ic("i-check")}<span>${esc(x)}</span></li>`).join("")}</ul>
+    <div class="viz">${viz(c.key)}</div></div>`);
+  document.querySelectorAll("#tablist .tab").forEach((b,i)=>b.setAttribute("aria-selected",i===tab));
+  document.querySelectorAll("#dots button").forEach((b,i)=>b.setAttribute("aria-current",i===tab));
+}
+function pick(i){tab=i;auto=false;render()}
+$("#tablist").addEventListener("click",e=>{const b=e.target.closest(".tab");if(b)pick(+b.dataset.i)});
+$("#dots").addEventListener("click",e=>{const b=e.target.closest("button");if(b)pick(+b.dataset.i)});
+render();
+setInterval(()=>{if(auto){tab=(tab+1)%CAPS.length;render()}},4200);
+
+/* faq */
+$("#acc").innerHTML=FAQ.map(([q,a],i)=>`
+  <div class="qa">
+    <button aria-expanded="${i===0}" data-i="${i}"><span>${esc(q)}</span>${ic("i-chev","1rem")}</button>
+    <div class="a${i===0?" open":""}"><div><p>${esc(a)}</p></div></div>
+  </div>`).join("");
+$("#acc").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const open=b.getAttribute("aria-expanded")==="true";
+  $("#acc").querySelectorAll("button").forEach(x=>x.setAttribute("aria-expanded","false"));
+  $("#acc").querySelectorAll(".a").forEach(x=>x.classList.remove("open"));
+  if(!open){b.setAttribute("aria-expanded","true");b.nextElementSibling.classList.add("open")}
+});
+
+/* scroll reveal — .reveal starts at opacity:0, so if the observer is unavailable
+   we must show everything rather than leave the page blank. */
+const rev=document.querySelectorAll(".reveal");
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}
+  }),{threshold:.12});
+  rev.forEach((el,i)=>{el.style.transitionDelay=`${(i%4)*70}ms`;io.observe(el)});
+}else{
+  rev.forEach(el=>el.classList.add("in"));
+}
+</script>
+
+</body>
+</html>

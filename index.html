@@ -300,6 +300,41 @@ tr:last-child td.di{border-radius:0 0 .75rem .75rem}
 .ships .nm{font-size:.875rem;font-weight:600;line-height:1.35}
 .ships .bd{margin-top:.125rem;font-size:.875rem;color:var(--muted);line-height:1.6}
 
+/* ---------- workflow mock (spotlight "slides") ---------- */
+.wf-tabs{display:flex;gap:.375rem;margin-bottom:1.25rem}
+.wf-tab{flex:1;border-radius:.5rem;border:1px solid rgb(224 227 245 / .8);background:transparent;
+  padding:.5rem .625rem;font-size:.75rem;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:.2s;font:inherit}
+.wf-tab:hover{border-color:rgb(91 110 245 / .35)}
+.wf-tab[aria-selected=true]{border-color:rgb(91 110 245 / .5);background:rgb(91 110 245 / .08);color:var(--primary)}
+.wf-panel{display:none;animation:swap .4s ease}
+.wf-panel.on{display:block}
+.wf-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem}
+.wf-kpis div{border-radius:.5rem;border:1px solid rgb(224 227 245 / .7);background:rgb(238 240 251 / .6);padding:.5rem .375rem;text-align:center}
+.wf-kpis b{display:block;font-size:.9375rem;font-weight:700;color:var(--fg)}
+.wf-kpis span{display:block;margin-top:.125rem;font-size:.625rem;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;line-height:1.3}
+.wf-rows{display:grid;gap:.5rem}
+.wf-row{display:flex;align-items:center;gap:.5rem;border-radius:.5rem;border:1px solid rgb(224 227 245 / .7);
+  background:rgb(238 240 251 / .5);padding:.5rem .625rem;transition:transform .2s,box-shadow .2s}
+.wf-row:hover{transform:translateX(2px);box-shadow:0 8px 20px -14px rgb(91 110 245 / .5)}
+.wf-row .id{flex:none;width:5rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.6875rem;font-weight:600;color:var(--fg)}
+.wf-row .ds{flex:1;min-width:0;font-size:.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wf-tag{flex:none;border-radius:999px;padding:.1875rem .5625rem;font-size:.625rem;font-weight:700}
+.wf-tag.hi{background:rgb(239 68 68 / .13);color:#b91c1c}
+.wf-tag.md{background:rgb(245 158 11 / .16);color:#92400e}
+.wf-tag.lo{background:rgb(34 197 94 / .15);color:#15803d}
+.wf-av{flex:none;display:flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;
+  border-radius:50%;background:var(--primary);color:#fff;font-size:.625rem;font-weight:700;letter-spacing:.01em}
+.wf-foot{margin-top:1rem;display:flex;align-items:center;gap:.5rem;font-size:.6875rem;color:var(--muted)}
+.wf-foot .icon{width:.875rem;height:.875rem;color:var(--primary);flex:none}
+
+/* audit-trail timeline viz (capability tab) */
+.tl{display:grid;gap:.75rem}
+.tl-row{display:flex;gap:.625rem;align-items:flex-start;font-size:.75rem}
+.tl-row .icon{width:1rem;height:1rem;color:var(--primary);margin-top:.15rem;flex:none}
+.tl-row b{display:block;font-weight:600;color:var(--fg)}
+.tl-row span{color:var(--muted)}
+
 /* ---------- trust ---------- */
 .trust{display:grid;gap:1.5rem;margin-top:2.5rem}
 @media(min-width:640px){.trust{grid-template-columns:1fr 1fr}}
@@ -358,6 +393,9 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;justify-conte
   <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 21h18"/></symbol>
   <symbol id="i-umb" viewBox="0 0 24 24"><path d="M12 3v1.5M2.5 12a9.5 9.5 0 0 1 19 0z"/><path d="M12 12v6.5a2.2 2.2 0 0 1-4.4 0"/></symbol>
   <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3.5V21M7 21h10M4 8.5h16M4 8.5 1.5 15h5zM20 8.5 17.5 15h5z"/><path d="M1.5 15a2.5 2.5 0 0 0 5 0M17.5 15a2.5 2.5 0 0 0 5 0"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><rect x="3" y="4.5" width="3" height="3" rx=".6"/><rect x="3" y="10.5" width="3" height="3" rx=".6"/><rect x="3" y="16.5" width="3" height="3" rx=".6"/></symbol>
+  <symbol id="i-trail" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.7"/><circle cx="5" cy="12" r="1.7"/><circle cx="5" cy="18" r="1.7"/><path d="M9 6h11M9 12h11M9 18h11"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17.5" cy="8.5" r="2.4"/><path d="M15.5 12.2a4.6 4.6 0 0 1 5.2 4.4"/></symbol>
 </defs>
 </svg>
 
@@ -565,25 +603,33 @@ const INDUSTRIES=[
  headline:"Adjudicate, appeal and recover — without leaving revenue or defensibility behind.",
  blurb:"From prior authorization to payment integrity, specialist agents do the reading and your clinicians and analysts make the call — with the evidence and the rules on the record.",
  outcomes:["Faster prior-auth turnaround","Higher clean-claim rates","Audit-ready determinations"],
- useCases:[["Claims Adjudication & Appeals","Resolve denials, appeals and prior authorizations faster."],["Provider Revenue Cycle","Lift clean-claim rates and recover the revenue you've earned."],["Payment Integrity (FWA / SIU)","Surface suspect claims and providers, then close each case defensibly."],["Care Management","Enroll, track and bill chronic-care and remote-monitoring programs."],["Pharmacy Benefits (PBM)","Speed authorization turnaround while protecting safety and rebates."],["Post-Acute Care","Run episodes and assessments cleanly and stay ahead of readmissions."]]},
+ useCases:[["Claims Adjudication & Appeals","Resolve denials, appeals and prior authorizations faster."],["Provider Revenue Cycle","Lift clean-claim rates and recover the revenue you've earned."],["Payment Integrity (FWA / SIU)","Surface suspect claims and providers, then close each case defensibly."],["Care Management","Enroll, track and bill chronic-care and remote-monitoring programs."],["Pharmacy Benefits (PBM)","Speed authorization turnaround while protecting safety and rebates."],["Post-Acute Care","Run episodes and assessments cleanly and stay ahead of readmissions."]],
+ workflow:{kpis:[["Open cases","482"],["Clean-claim rate","94%"],["Auto-drafted","76%"]],
+   rows:[["PA-48213","Prior authorization · duplicate flag","hi","VP"],["APL-2209","Appeal · missing clinical notes","md","AC"],["CLM-71042","Claim · ready to pay","lo","JR"]]}},
 {id:"banking",name:"Banking & Financial Services",who:"Fraud, AML, disputes & lending",icon:"i-bank",
  tag:"Monitor, adjudicate and file with a decision you can stand behind.",
  headline:"Reach the filing, the dispute call and the credit decision — and prove how you got there.",
  blurb:"Route alerts and cases to the right specialist, cut false positives, and reach determinations a regulator can follow — every step logged with the evidence it stood on.",
  outcomes:["Fewer false positives","Consistent filing decisions","Regulator-ready trails"],
- useCases:[["Financial Crime & AML","Monitor transactions, screen sanctions and reach defensible filing decisions."],["Card Disputes & Chargebacks","Adjudicate disputes and representment with the evidence attached."],["Credit Bureau Disputes","Investigate and resolve consumer disputes inside the regulatory clock."],["Mortgage Loss Mitigation","Work borrowers through options consistently and on time."],["Underwriting Intake","Turn messy application packages into a clean, ranked decision."]]},
+ useCases:[["Financial Crime & AML","Monitor transactions, screen sanctions and reach defensible filing decisions."],["Card Disputes & Chargebacks","Adjudicate disputes and representment with the evidence attached."],["Credit Bureau Disputes","Investigate and resolve consumer disputes inside the regulatory clock."],["Mortgage Loss Mitigation","Work borrowers through options consistently and on time."],["Underwriting Intake","Turn messy application packages into a clean, ranked decision."]],
+ workflow:{kpis:[["Open alerts","318"],["False positives","−42%"],["Filing SLA","On track"]],
+   rows:[["AML-90142","Structuring pattern · escalate","hi","MK"],["DSP-33871","Card dispute · evidence attached","md","LT"],["KYC-15820","Onboarding · auto-cleared","lo","RS"]]}},
 {id:"insurance",name:"Insurance",who:"P&C, specialty & warranty",icon:"i-umb",
  tag:"Triage and resolve claims across lines with a consistent, auditable call.",
  headline:"Triage severity, catch leakage and settle — the same defensible way, every claim.",
  blurb:"Score severity on arrival, route each claim to the right desk, and settle with the coverage read and the reasoning captured — so outcomes hold up on review.",
  outcomes:["Less claims leakage","Right-desk routing","Consistent settlements"],
- useCases:[["Auto & Trucking Claims","Triage severity, spot leakage and route each claim to the right desk."],["Workers' Compensation","Manage claims and reserves with the reasoning captured end to end."],["Construction & Property","Handle defect and property claims with the evidence in one place."],["Warranty Claims","Validate coverage and settle warranty claims at scale."]]},
+ useCases:[["Auto & Trucking Claims","Triage severity, spot leakage and route each claim to the right desk."],["Workers' Compensation","Manage claims and reserves with the reasoning captured end to end."],["Construction & Property","Handle defect and property claims with the evidence in one place."],["Warranty Claims","Validate coverage and settle warranty claims at scale."]],
+ workflow:{kpis:[["Open claims","647"],["Leakage caught","$1.2M"],["Right-desk routing","98%"]],
+   rows:[["CLM-55210","Auto claim · high severity","hi","DW"],["WC-19042","Workers' comp · reserve review","md","NB"],["WAR-8821","Warranty · validated","lo","EK"]]}},
 {id:"risk-ops",name:"Risk, Trust & Operations",who:"Back-office adjudication queues",icon:"i-scale",
  tag:"The judgment-heavy back-office queues, standardized and sped up.",
  headline:"Standardize the judgment calls buried in operations — and clear the backlog.",
  blurb:"Invoice audit, screening, appeals and notices are all the same shape: read the evidence, apply the policy, decide. Datacern runs each as a governed queue your team can trust.",
  outcomes:["Shorter backlogs","Policy applied consistently","Every call defensible"],
- useCases:[["AP Invoice Audit","Catch duplicate, non-compliant and over-billed invoices before they pay."],["Background & Seller Vetting","Adjudicate screening and marketplace-vetting cases against policy."],["Trust & Safety Appeals","Review enforcement appeals quickly and consistently."],["Tax Notice Resolution","Classify notices, draft the response and track each to closure."]]}];
+ useCases:[["AP Invoice Audit","Catch duplicate, non-compliant and over-billed invoices before they pay."],["Background & Seller Vetting","Adjudicate screening and marketplace-vetting cases against policy."],["Trust & Safety Appeals","Review enforcement appeals quickly and consistently."],["Tax Notice Resolution","Classify notices, draft the response and track each to closure."]],
+ workflow:{kpis:[["Open cases","1,204"],["Backlog","−58%"],["Policy adherence","100%"]],
+   rows:[["INV-40213","Invoice audit · duplicate billing","hi","TS"],["SCR-9042","Seller vetting · flagged pattern","md","GH"],["APP-2201","Appeal · standard review","lo","CP"]]}}];
 
 const MORE=[["Healthcare & Life Sciences","Prior auth, claims, payment integrity"],["Banking & Capital Markets","AML alerts, disputes, credit decisions"],["Insurance","Claim triage, leakage, settlements"],["Government & Public Sector","Benefits, eligibility, case adjudication"],["Manufacturing & Industrial","Quality dispositions, MRB, warranty"],["Retail & Consumer Goods","Returns, chargebacks, seller vetting"],["Energy & Utilities","Inspections, outage triage, safety cases"],["Telecom & Media","Fraud, provisioning, content appeals"],["Transportation & Logistics","Freight claims, safety, exceptions"],["Pharma & Biotech","Pharmacovigilance, device complaints"],["Fintech & Payments","Onboarding/KYC, disputes, risk"],["Real Estate & Mortgage","Underwriting intake, loss mitigation"],["Legal & Compliance","Contract review, sanctions, filings"],["Education","Admissions, aid, integrity cases"],["Travel & Hospitality","Refunds, chargebacks, fraud"],["Automotive","Warranty, recalls, defect claims"],["Aerospace & Defense","Nonconformance, compliance, audits"],["Agriculture & Food","Inspections, quality, traceability"],["Construction & Engineering","Defect claims, safety, change orders"],["Technology & Trust/Safety","Abuse review, appeals, moderation"]];
 
@@ -591,6 +637,9 @@ const CAPS=[
 {key:"agents",icon:"i-bot",eyebrow:"Agentic workforce",title:"A team of specialist AI agents",
  body:"Purpose-built agents do the reading and draft the work — triaging cases, answering data questions, designing dashboards, training models, watching for drift. They propose; they never act on their own.",
  points:["Draft dispositions with cited evidence","Route work to the right specialist","Open proposals, never silent writes"]},
+{key:"worklist",icon:"i-list",eyebrow:"Governed queue",title:"A worklist built for decisions",
+ body:"Every case lands pre-scored by risk and age, with the evidence and the agent's draft already attached — so your reviewers open a case ready to decide, not to dig for context.",
+ points:["Auto-prioritized by risk and SLA","Evidence and draft attached on open","Assign, escalate or approve in one place"]},
 {key:"copilot",icon:"i-chat",eyebrow:"Conversational",title:"A copilot that knows your role",
  body:"Ask in plain language and get an answer grounded in your governed data and your permissions. Need a change made? The copilot proposes it for a human to approve — it can't do anything you couldn't.",
  points:["Grounded in your metrics, not guesses","Aware of what you're allowed to see","Turns a question into a governed action"]},
@@ -603,6 +652,9 @@ const CAPS=[
 {key:"analytics",icon:"i-chart",eyebrow:"Governed insight",title:"Analytics your team can trust",
  body:"Business metrics are defined once, reviewed, and reused everywhere — so dashboards agree. Click any bar, slice or row and the whole board filters to match.",
  points:["One trusted definition per metric","Cross-filter the entire board","From a chart straight into a work queue"]},
+{key:"audit",icon:"i-trail",eyebrow:"Tamper-evident",title:"An audit trail for every decision",
+ body:"Every proposal, approval and override is time-stamped and chained together — so when a regulator or auditor asks why a call was made, the answer is already written down.",
+ points:["Immutable, chained record","A second reviewer on sensitive changes","Exportable evidence, case by case"]},
 {key:"ml",icon:"i-cpu",eyebrow:"Own your models",title:"Machine learning, built in",
  body:"Train candidate models on your own decisions, evaluate them against your benchmarks, and promote the winner through an approval gate. Repetitive calls move off expensive AI and onto models you own.",
  points:["No-code pipelines over a rich algorithm catalog","Evaluated before anything ships","Cost per decision trends down"]}];
@@ -686,17 +738,43 @@ $("#spotlights").innerHTML=INDUSTRIES.map((d,i)=>`
         <div class="outcomes">${d.outcomes.map(o=>`<span class="outcome">${ic("i-check")}${esc(o)}</span>`).join("")}</div>
       </div>
       <div class="reveal"><div class="glass ships">
-        <div class="who">Solutions that ship</div>
-        <ul>${d.useCases.map(([n,b])=>`<li><span class="mk">${ic("i-check")}</span>
-          <div><div class="nm">${esc(n)}</div><div class="bd">${esc(b)}</div></div></li>`).join("")}</ul>
+        <div class="wf-tabs" role="tablist" aria-label="${esc(d.name)} views">
+          <button class="wf-tab" role="tab" data-k="solutions" aria-selected="true">Solutions that ship</button>
+          <button class="wf-tab" role="tab" data-k="workflow" aria-selected="false">${ic("i-users",".875rem")}&nbsp;In your workflow</button>
+        </div>
+        <div class="wf-panel on" data-k="solutions">
+          <ul>${d.useCases.map(([n,b])=>`<li><span class="mk">${ic("i-check")}</span>
+            <div><div class="nm">${esc(n)}</div><div class="bd">${esc(b)}</div></div></li>`).join("")}</ul>
+        </div>
+        <div class="wf-panel" data-k="workflow">
+          <div class="wf-kpis">${d.workflow.kpis.map(([k,v])=>`<div><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("")}</div>
+          <div class="wf-rows">${d.workflow.rows.map(([id,ds,tag,av])=>`<div class="wf-row">
+            <span class="id">${esc(id)}</span><span class="ds">${esc(ds)}</span>
+            <span class="wf-tag ${tag}">${tag==="hi"?"High":tag==="md"?"Med":"Low"}</span>
+            <span class="wf-av">${esc(av)}</span></div>`).join("")}</div>
+          <div class="wf-foot">${ic("i-check",".875rem")}Reviewed and approved by your team — logged automatically</div>
+        </div>
       </div></div>
     </div>
   </section>`).join("");
+
+/* per-industry "Solutions / In your workflow" tab toggle (delegated — one
+   listener covers every spotlight card) */
+$("#spotlights").addEventListener("click",e=>{
+  const b=e.target.closest(".wf-tab");if(!b)return;
+  const card=b.closest(".ships");
+  card.querySelectorAll(".wf-tab").forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));
+  card.querySelectorAll(".wf-panel").forEach(p=>p.classList.toggle("on",p.dataset.k===b.dataset.k));
+});
 
 /* capability tabs */
 function viz(k){
   if(k==="agents")return `<div class="v2">${["Triage","Analytics","ML Engineer","Governance"].map((a,i)=>
     `<div class="a"><span class="ibox">${ic("i-bot")}</span><b>${a}</b><span class="led${i%2?"":" em"}"></span></div>`).join("")}</div>`;
+  if(k==="worklist")return `<div class="wf-rows">
+    <div class="wf-row"><span class="id">#48213</span><span class="ds">Prior auth · duplicate flag</span><span class="wf-tag hi">High</span><span class="wf-av">VP</span></div>
+    <div class="wf-row"><span class="id">#48219</span><span class="ds">Appeal · missing docs</span><span class="wf-tag md">Med</span><span class="wf-av">AC</span></div>
+    <div class="wf-row"><span class="id">#48224</span><span class="ds">Claim · ready to pay</span><span class="wf-tag lo">Low</span><span class="wf-av">JR</span></div></div>`;
   if(k==="copilot")return `<div class="bub me">Which denials spiked this week, and why?</div>
     <div class="bub ai">Timely-filing denials rose on two payers. <b>Draft a rule to auto-flag them?</b></div>
     <div class="mini"><span class="p1">Propose rule</span><span class="p2">Open worklist</span></div>`;
@@ -710,6 +788,10 @@ function viz(k){
       <div><b>ELSE</b><s></s><em>→ standard review</em></div></div>`;
   if(k==="analytics")return `<div class="bars">${[45,70,40,90,60,80].map(h=>`<i style="height:${h}%"></i>`).join("")}</div>
       <div class="kpis"><div>Denial rate</div><div>Clean-claim</div><div>A/R days</div></div>`;
+  if(k==="audit")return `<div class="tl">
+      <div class="tl-row">${ic("i-check")}<div><b>Agent proposed</b><span>disposition drafted · evidence attached</span></div></div>
+      <div class="tl-row">${ic("i-check")}<div><b>A. Chen approved</b><span>second reviewer signed off</span></div></div>
+      <div class="tl-row">${ic("i-check")}<div><b>Action executed</b><span>logged to the immutable trail</span></div></div></div>`;
   return `<div class="flow"><span>Train</span>${ic("i-arrow",".75rem")}<span>Evaluate</span>${ic("i-arrow",".75rem")}<span class="on">Promote</span></div>`;
 }
 

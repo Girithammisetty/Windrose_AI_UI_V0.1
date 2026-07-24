@@ -328,6 +328,32 @@ tr:last-child td.di{border-radius:0 0 .75rem .75rem}
 .wf-foot{margin-top:1rem;display:flex;align-items:center;gap:.5rem;font-size:.6875rem;color:var(--muted)}
 .wf-foot .icon{width:.875rem;height:.875rem;color:var(--primary);flex:none}
 
+/* ---------- lane switcher (sub-vertical tabs within a spotlight) ---------- */
+.lanes{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem}
+.lane{display:inline-flex;align-items:center;border-radius:999px;
+  border:1px solid rgb(224 227 245 / .9);background:var(--card);
+  padding:.45rem .9rem;font-size:.8125rem;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:.2s;font:inherit}
+.lane:hover{border-color:rgb(91 110 245 / .45);color:var(--fg)}
+.lane[aria-selected=true]{border-color:transparent;background:var(--primary);
+  color:var(--primary-fg);box-shadow:0 10px 24px -14px rgb(91 110 245 / .8)}
+.lane .c{margin-left:.4rem;font-size:.6875rem;font-weight:700;
+  border-radius:999px;padding:.05rem .4rem;background:rgb(91 110 245 / .12);color:var(--primary)}
+.lane[aria-selected=true] .c{background:rgb(255 255 255 / .25);color:#fff}
+.lane-body{display:none;animation:swap .4s ease}
+.lane-body.on{display:block}
+.lane-sub{font-size:.75rem;font-weight:600;color:var(--primary);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem}
+.block-h{display:flex;align-items:center;gap:.4rem;font-size:.6875rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.25rem 0 .625rem}
+.block-h:first-child{margin-top:0}
+.block-h.sol{color:var(--primary)}
+.block-h .icon{width:.875rem;height:.875rem}
+.probs{display:grid;gap:.5rem}
+.prob{display:flex;gap:.5rem;font-size:.8125rem;color:var(--muted);line-height:1.5}
+.prob .icon{width:1rem;height:1rem;color:#c2569a;margin-top:.12rem;flex:none}
+.ships ul.sol{margin-top:0}
+
 /* audit-trail timeline viz (capability tab) */
 .tl{display:grid;gap:.75rem}
 .tl-row{display:flex;gap:.625rem;align-items:flex-start;font-size:.75rem}
@@ -396,6 +422,7 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;justify-conte
   <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><rect x="3" y="4.5" width="3" height="3" rx=".6"/><rect x="3" y="10.5" width="3" height="3" rx=".6"/><rect x="3" y="16.5" width="3" height="3" rx=".6"/></symbol>
   <symbol id="i-trail" viewBox="0 0 24 24"><circle cx="5" cy="6" r="1.7"/><circle cx="5" cy="12" r="1.7"/><circle cx="5" cy="18" r="1.7"/><path d="M9 6h11M9 12h11M9 18h11"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17.5" cy="8.5" r="2.4"/><path d="M15.5 12.2a4.6 4.6 0 0 1 5.2 4.4"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.4"/><path d="M12 1.8v3.2M12 19v3.2M1.8 12h3.2M19 12h3.2"/></symbol>
 </defs>
 </svg>
 
@@ -477,9 +504,9 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;justify-conte
   <div class="reveal">
     <span class="eyebrow"><svg class="icon" style="width:.875rem;height:.875rem"><use href="#i-spark"/></svg>Solutions by industry</span>
     <h2>Decision intelligence for every industry</h2>
-    <p class="lede" style="margin-top:.75rem">If a team reads evidence, applies a policy and makes a call — at volume and under scrutiny — Datacern runs it. Four domains ship deep today; the same governed platform adapts to any data-driven decision queue.</p>
+    <p class="lede" style="margin-top:.75rem">If a team reads evidence, applies a policy and makes a call — at volume and under scrutiny — Datacern runs it. Four industries ship deep today, each split into the sub-domains your teams actually work in — <b style="color:var(--fg)">payer vs provider vs pharmacy; financial crime vs disputes vs lending</b> — and the same governed platform adapts to any data-driven decision queue.</p>
   </div>
-  <div class="subhead">Flagship solutions — built deep</div>
+  <div class="subhead">Flagship solutions — pick your lane</div>
   <div class="cards" id="industry-cards"></div>
 
   <div style="margin-top:3.5rem">
@@ -598,38 +625,89 @@ footer .wrap{display:flex;flex-direction:column;align-items:center;justify-conte
 const AGENTS=[["Claims Triage Agent","reads each case and drafts the disposition"],["Analytics Copilot","answers data questions in plain language"],["Governance & Compliance Agent","checks every action against policy"],["Data Onboarding Agent","profiles new data and gets it decision-ready"],["Reporting Designer Agent","builds the dashboards your team needs"],["Model Ops Agent","trains, evaluates and promotes your models"]];
 
 const INDUSTRIES=[
-{id:"healthcare",name:"Healthcare",who:"Payers, providers & pharmacy",icon:"i-heart",
- tag:"Claims, care and revenue decisions — the reasoning attached to every call.",
+{id:"healthcare",name:"Healthcare & Life Sciences",who:"Payer · Provider · Pharmacy",icon:"i-heart",
+ tag:"Claims, care, revenue and safety decisions — the reasoning attached to every call.",
  headline:"Adjudicate, appeal and recover — without leaving revenue or defensibility behind.",
- blurb:"From prior authorization to payment integrity, specialist agents do the reading and your clinicians and analysts make the call — with the evidence and the rules on the record.",
+ blurb:"From prior authorization to payment integrity to drug-safety intake, specialist agents do the reading and your clinicians and analysts make the call — with the evidence and the rules on the record. Pick the lane your team works in.",
  outcomes:["Faster prior-auth turnaround","Higher clean-claim rates","Audit-ready determinations"],
- useCases:[["Claims Adjudication & Appeals","Resolve denials, appeals and prior authorizations faster."],["Provider Revenue Cycle","Lift clean-claim rates and recover the revenue you've earned."],["Payment Integrity (FWA / SIU)","Surface suspect claims and providers, then close each case defensibly."],["Care Management","Enroll, track and bill chronic-care and remote-monitoring programs."],["Pharmacy Benefits (PBM)","Speed authorization turnaround while protecting safety and rebates."],["Post-Acute Care","Run episodes and assessments cleanly and stay ahead of readmissions."]],
- workflow:{kpis:[["Open cases","482"],["Clean-claim rate","94%"],["Auto-drafted","76%"]],
-   rows:[["PA-48213","Prior authorization · duplicate flag","hi","VP"],["APL-2209","Appeal · missing clinical notes","md","AC"],["CLM-71042","Claim · ready to pay","lo","JR"]]}},
-{id:"banking",name:"Banking & Financial Services",who:"Fraud, AML, disputes & lending",icon:"i-bank",
+ lanes:[
+  {id:"hc-payer",name:"Payer",tag:"Health plans & Medicare Advantage",
+   problems:["Prior-auth and appeal backlogs blow past CMS turnaround clocks","Fraud, waste and abuse leaks millions before SIU can build a defensible case","Denial reasoning isn't captured, so appeals and audits reopen the same call"],
+   solutions:[["Claims Adjudication & Appeals","Resolve denials, appeals and prior authorizations inside the CMS clock — every determination evidenced (CMS-4201-F / 0057-F)."],["Payment Integrity — FWA / SIU","Surface suspect claims and providers, then build each case to a defensible referral."]],
+   workflow:{kpis:[["Open cases","482"],["PA turnaround","−41%"],["Auto-drafted","76%"]],
+     rows:[["PA-48213","Prior authorization · duplicate flag","hi","VP"],["APL-2209","Appeal · missing clinical notes","md","AC"],["FWA-7104","Payment integrity · upcoding pattern","hi","JR"]]}},
+  {id:"hc-provider",name:"Provider",tag:"Health systems & post-acute",
+   problems:["Preventable denials and coding gaps bleed revenue you already earned","A/R days climb while staff rework the same claims by hand","Care-management and post-acute episodes miss billable, compliant documentation"],
+   solutions:[["Provider Revenue Cycle","Lift clean-claim rates and recover earned revenue — denials worked to root cause (NCCI / LCD-NCD)."],["Care Management — CCM / RPM","Enroll, track and bill chronic-care and remote-monitoring programs to CMS rules."],["Post-Acute Care","Run home-health, SNF and hospice episodes cleanly and stay ahead of readmissions."]],
+   workflow:{kpis:[["Clean-claim rate","94%"],["A/R days","−12"],["Revenue recovered","$3.4M"]],
+     rows:[["RCM-71042","Denial · timely-filing appeal","hi","DW"],["CCM-3320","Care mgmt · RPM billing gap","md","NB"],["PAC-8821","Home health · OASIS-E review","lo","EK"]]}},
+  {id:"hc-pharmacy",name:"Pharmacy & Life Sciences",tag:"PBM, drug safety & medtech",
+   problems:["PA turnaround and adherence targets collide with patient-safety checks","Adverse-event (ICSR) intake races FDA / ICH reporting deadlines","Device complaints must be triaged for MDR reportability without missing a signal"],
+   solutions:[["Pharmacy Benefits — PBM","Speed authorization turnaround while protecting safety, adherence and rebates (CMS Part D)."],["Pharmacovigilance","Intake, code and prioritize adverse-event reports against ICH E2 / FDA timelines."],["Device Complaints — MDR","Triage post-market complaints for reportability and quality signals (21 CFR 803 / 820)."]],
+   workflow:{kpis:[["PA turnaround","−38%"],["ICSR on-time","99%"],["Signals triaged","1,120"]],
+     rows:[["PBM-5521","Prior auth · step-therapy check","md","LT"],["PV-2044","Adverse event · serious / expedited","hi","RS"],["MDR-1180","Device complaint · reportable","hi","GH"]]}}
+ ]},
+{id:"banking",name:"Banking & Financial Services",who:"Financial crime · Disputes · Lending",icon:"i-bank",
  tag:"Monitor, adjudicate and file with a decision you can stand behind.",
  headline:"Reach the filing, the dispute call and the credit decision — and prove how you got there.",
  blurb:"Route alerts and cases to the right specialist, cut false positives, and reach determinations a regulator can follow — every step logged with the evidence it stood on.",
  outcomes:["Fewer false positives","Consistent filing decisions","Regulator-ready trails"],
- useCases:[["Financial Crime & AML","Monitor transactions, screen sanctions and reach defensible filing decisions."],["Card Disputes & Chargebacks","Adjudicate disputes and representment with the evidence attached."],["Credit Bureau Disputes","Investigate and resolve consumer disputes inside the regulatory clock."],["Mortgage Loss Mitigation","Work borrowers through options consistently and on time."],["Underwriting Intake","Turn messy application packages into a clean, ranked decision."]],
- workflow:{kpis:[["Open alerts","318"],["False positives","−42%"],["Filing SLA","On track"]],
-   rows:[["AML-90142","Structuring pattern · escalate","hi","MK"],["DSP-33871","Card dispute · evidence attached","md","LT"],["KYC-15820","Onboarding · auto-cleared","lo","RS"]]}},
-{id:"insurance",name:"Insurance",who:"P&C, specialty & warranty",icon:"i-umb",
+ lanes:[
+  {id:"bk-crime",name:"Financial Crime & AML",tag:"BSA / OFAC / sanctions",
+   problems:["Alert volumes bury analysts and false positives crowd out real risk","SAR narratives and sanctions calls must be consistent and defensible","Investigations sprawl across systems with no single audit trail"],
+   solutions:[["Financial Crime & AML","Monitor transactions, screen sanctions and reach defensible SAR / filing decisions (BSA / FinCEN / OFAC)."]],
+   workflow:{kpis:[["Open alerts","318"],["False positives","−42%"],["SAR SLA","On track"]],
+     rows:[["AML-90142","Structuring pattern · escalate","hi","MK"],["SAN-4471","Sanctions hit · secondary review","md","LT"],["KYC-15820","Onboarding · auto-cleared","lo","RS"]]}},
+  {id:"bk-disputes",name:"Payments & Disputes",tag:"Reg E / Reg Z / FCRA",
+   problems:["Reg E / Reg Z clocks run while evidence is gathered by hand","Chargeback representment loses winnable cases for lack of a package","FCRA credit-dispute reinvestigations risk missed deadlines and reinsertions"],
+   solutions:[["Card Disputes","Adjudicate Reg E / Reg Z disputes with the evidence attached and the clock tracked."],["Chargeback Representment","Assemble winning representment packages for merchants at scale (Visa / MC rules)."],["Credit Bureau Disputes","Investigate and resolve FCRA furnisher disputes inside the regulatory window."]],
+   workflow:{kpis:[["Open disputes","540"],["Win rate","+18%"],["On-time","100%"]],
+     rows:[["DSP-33871","Card dispute · evidence attached","md","LT"],["CBK-2098","Chargeback · representment ready","hi","MK"],["FCR-7741","Credit dispute · reinvestigation","md","RS"]]}},
+  {id:"bk-lending",name:"Lending & Servicing",tag:"RESPA / GSE guidelines",
+   problems:["Loss-mitigation workouts must follow RESPA / GSE rules exactly, every borrower","Manual reviews stall while borrowers slide toward default","Servicing decisions lack a consistent, auditable rationale"],
+   solutions:[["Mortgage Loss Mitigation","Work borrowers through options consistently and on time, under RESPA Reg X / GSE guides."]],
+   workflow:{kpis:[["Active workouts","212"],["On-time decisions","98%"],["Cycle time","−9d"]],
+     rows:[["LM-5521","Loss mit · document completeness","md","DW"],["LM-5533","Workout · investor-rule check","hi","NB"],["LM-5540","Modification · approved","lo","EK"]]}}
+ ]},
+{id:"insurance",name:"Insurance",who:"P&C claims · Specialty · Underwriting",icon:"i-umb",
  tag:"Triage and resolve claims across lines with a consistent, auditable call.",
  headline:"Triage severity, catch leakage and settle — the same defensible way, every claim.",
  blurb:"Score severity on arrival, route each claim to the right desk, and settle with the coverage read and the reasoning captured — so outcomes hold up on review.",
  outcomes:["Less claims leakage","Right-desk routing","Consistent settlements"],
- useCases:[["Auto & Trucking Claims","Triage severity, spot leakage and route each claim to the right desk."],["Workers' Compensation","Manage claims and reserves with the reasoning captured end to end."],["Construction & Property","Handle defect and property claims with the evidence in one place."],["Warranty Claims","Validate coverage and settle warranty claims at scale."]],
- workflow:{kpis:[["Open claims","647"],["Leakage caught","$1.2M"],["Right-desk routing","98%"]],
-   rows:[["CLM-55210","Auto claim · high severity","hi","DW"],["WC-19042","Workers' comp · reserve review","md","NB"],["WAR-8821","Warranty · validated","lo","EK"]]}},
-{id:"risk-ops",name:"Risk, Trust & Operations",who:"Back-office adjudication queues",icon:"i-scale",
+ lanes:[
+  {id:"in-claims",name:"Claims across lines",tag:"Workers' comp · Property · Cargo · Warranty",
+   problems:["Severity and leakage are missed at first notice of loss","Claims land on the wrong desk and reserves drift","Coverage decisions vary by adjuster and reopen on audit"],
+   solutions:[["Workers' Compensation","Manage claims, reserves and bill review with the reasoning captured end to end."],["Construction & Property","Handle defect, delay and property claims with the evidence in one place."],["Auto & Trucking Cargo","Triage severity, spot leakage and route each claim (Carmack / FMCSA)."],["Warranty Claims","Validate coverage and settle warranty claims at scale (Magnuson-Moss)."]],
+   workflow:{kpis:[["Open claims","647"],["Leakage caught","$1.2M"],["Right-desk","98%"]],
+     rows:[["WC-19042","Workers' comp · reserve review","hi","DW"],["CON-5521","Construction · delay claim","md","NB"],["CGO-8842","Cargo claim · Carmack review","md","EK"]]}},
+  {id:"in-uw",name:"Underwriting & Intake",tag:"Commercial lines",
+   problems:["Submission packages arrive messy and incomplete","Triage and clearance eat underwriter time before any risk call","Appetite and eligibility rules are applied inconsistently"],
+   solutions:[["Underwriting Intake & Triage","Turn messy commercial submissions into a clean, ranked, appetite-checked decision."]],
+   workflow:{kpis:[["Submissions","1,020"],["Clean intake","+63%"],["Time-to-quote","−7d"]],
+     rows:[["UW-4021","Submission · missing SOV","md","GH"],["UW-4033","Clearance · appetite match","lo","TS"],["UW-4048","Intake · ranked & routed","lo","CP"]]}}
+ ]},
+{id:"risk-ops",name:"Risk, Trust & Operations",who:"Trust & Safety · Finance ops · Industrial",icon:"i-scale",
  tag:"The judgment-heavy back-office queues, standardized and sped up.",
  headline:"Standardize the judgment calls buried in operations — and clear the backlog.",
- blurb:"Invoice audit, screening, appeals and notices are all the same shape: read the evidence, apply the policy, decide. Datacern runs each as a governed queue your team can trust.",
+ blurb:"Invoice audit, screening, appeals, notices, inspections — all the same shape: read the evidence, apply the policy, decide. Datacern runs each as a governed queue your team can trust.",
  outcomes:["Shorter backlogs","Policy applied consistently","Every call defensible"],
- useCases:[["AP Invoice Audit","Catch duplicate, non-compliant and over-billed invoices before they pay."],["Background & Seller Vetting","Adjudicate screening and marketplace-vetting cases against policy."],["Trust & Safety Appeals","Review enforcement appeals quickly and consistently."],["Tax Notice Resolution","Classify notices, draft the response and track each to closure."]],
- workflow:{kpis:[["Open cases","1,204"],["Backlog","−58%"],["Policy adherence","100%"]],
-   rows:[["INV-40213","Invoice audit · duplicate billing","hi","TS"],["SCR-9042","Seller vetting · flagged pattern","md","GH"],["APP-2201","Appeal · standard review","lo","CP"]]}}];
+ lanes:[
+  {id:"ro-trust",name:"Trust & Safety",tag:"Marketplaces & screening",
+   problems:["Marketplace risk, counterfeit and abuse scale faster than review teams","Enforcement appeals must be fair, fast and consistent under DSA / OSA","FCRA-governed screening adjudications carry legal exposure if inconsistent"],
+   solutions:[["Marketplace Seller Vetting","Adjudicate counterfeit, IP and seller-risk cases against policy (INFORM / DSA)."],["Trust & Safety Appeals","Review enforcement appeals quickly and consistently under DSA / OSA."],["Background Screening","Adjudicate FCRA-governed screening cases with consistent, defensible calls."]],
+   workflow:{kpis:[["Open cases","1,204"],["Backlog","−58%"],["Policy adherence","100%"]],
+     rows:[["SEL-9042","Seller vetting · counterfeit signal","hi","GH"],["APP-2201","Enforcement appeal · review","md","CP"],["BGS-3310","Screening · adverse-action review","md","TS"]]}},
+  {id:"ro-finance",name:"Finance & Compliance Ops",tag:"AP · Tax · Trade",
+   problems:["Duplicate and non-compliant invoices pay before anyone catches them","Tax notices pile up and miss response deadlines","Customs and sanctions screening slows trade or lets risk through"],
+   solutions:[["AP Invoice Audit","Catch duplicate, non-compliant and over-billed invoices before they pay (SOX / 1099)."],["Tax Notice Resolution","Classify notices, draft the response and track each to closure."],["Trade & Customs Compliance","Screen imports for sanctions, tariff and forced-labor risk (OFAC / UFLPA)."]],
+   workflow:{kpis:[["Open items","860"],["Recovered","$2.1M"],["On-time","100%"]],
+     rows:[["INV-40213","Invoice audit · duplicate billing","hi","TS"],["TAX-2209","Tax notice · sales/use abatement","md","GH"],["TRD-1180","Trade · UFLPA screen","hi","CP"]]}},
+  {id:"ro-industrial",name:"Industrial & Public",tag:"Quality · Inspections · Benefits",
+   problems:["Nonconforming material waits on slow MRB dispositions","Field inspections surface risk faster than crews can adjudicate","Benefits eligibility appeals must meet due-process timelines at volume"],
+   solutions:[["Manufacturing MRB","Disposition nonconforming material fast, with the quality rationale captured (AS9100 / ISO)."],["Utility Inspections","Triage inspection findings and wildfire / asset risk for action."],["Benefits Appeals","Adjudicate eligibility appeals consistently, inside due-process timelines."]],
+   workflow:{kpis:[["Open cases","735"],["Cycle time","−44%"],["Consistency","100%"]],
+     rows:[["MRB-5521","Nonconformance · use-as-is review","md","DW"],["UTL-8842","Inspection · wildfire-risk span","hi","NB"],["BEN-2044","Benefits appeal · due-process clock","md","EK"]]}}
+ ]}];
 
 const MORE=[["Healthcare & Life Sciences","Prior auth, claims, payment integrity"],["Banking & Capital Markets","AML alerts, disputes, credit decisions"],["Insurance","Claim triage, leakage, settlements"],["Government & Public Sector","Benefits, eligibility, case adjudication"],["Manufacturing & Industrial","Quality dispositions, MRB, warranty"],["Retail & Consumer Goods","Returns, chargebacks, seller vetting"],["Energy & Utilities","Inspections, outage triage, safety cases"],["Telecom & Media","Fraud, provisioning, content appeals"],["Transportation & Logistics","Freight claims, safety, exceptions"],["Pharma & Biotech","Pharmacovigilance, device complaints"],["Fintech & Payments","Onboarding/KYC, disputes, risk"],["Real Estate & Mortgage","Underwriting intake, loss mitigation"],["Legal & Compliance","Contract review, sanctions, filings"],["Education","Admissions, aid, integrity cases"],["Travel & Hospitality","Refunds, chargebacks, fraud"],["Automotive","Warranty, recalls, defect claims"],["Aerospace & Defense","Nonconformance, compliance, audits"],["Agriculture & Food","Inspections, quality, traceability"],["Construction & Engineering","Defect claims, safety, change orders"],["Technology & Trust/Safety","Abuse review, appeals, moderation"]];
 
@@ -694,7 +772,8 @@ const $=s=>document.querySelector(s);
 $("#marq").innerHTML=[...AGENTS,...AGENTS].map(([n,r])=>
   `<span class="chip">${ic("i-bot")}<b>${esc(n)}</b><span>— ${esc(r)}</span></span>`).join("");
 
-/* industry cards */
+/* industry cards — each previews its solution lanes (sub-verticals) */
+const solCount=d=>d.lanes.reduce((n,l)=>n+l.solutions.length,0);
 $("#industry-cards").innerHTML=INDUSTRIES.map(d=>`
   <div class="reveal"><a href="#ind-${d.id}" class="glass card">
     <div class="row" style="align-items:flex-start">
@@ -702,8 +781,9 @@ $("#industry-cards").innerHTML=INDUSTRIES.map(d=>`
     </div>
     <h3>${esc(d.name)}</h3><div class="who">${esc(d.who)}</div>
     <p>${esc(d.tag)}</p>
-    <div class="pills">${d.useCases.slice(0,3).map(u=>`<span class="pill">${esc(u[0])}</span>`).join("")}
-      ${d.useCases.length>3?`<span class="pill-more">+${d.useCases.length-3} more</span>`:""}</div>
+    <div class="pills">${d.lanes.map(l=>`<span class="pill">${esc(l.name)}</span>`).join("")}</div>
+    <div style="margin-top:.875rem;font-size:.75rem;font-weight:600;color:var(--primary)">
+      ${solCount(d)} solutions · ${d.lanes.length} area${d.lanes.length>1?"s":""}</div>
   </a></div>`).join("");
 
 $("#industry-map").innerHTML=MORE.map(([n,e])=>`
@@ -723,7 +803,25 @@ $("#steps").innerHTML=STEPS.map(([t,b],i)=>`
 $("#trust").innerHTML=TRUST.map(([t,b])=>`
   <div class="reveal"><h3>${esc(t)}</h3><p>${esc(b)}</p></div>`).join("");
 
-/* spotlights */
+/* spotlights — each industry splits into solution LANES (sub-verticals). The
+   left column carries the lane switcher; the right column shows the selected
+   lane's problems solved, solutions that ship, and a live-workflow visual. */
+const laneBody=(l,on)=>`
+  <div class="lane-body${on?" on":""}" data-l="${l.id}">
+    <div class="lane-sub">${esc(l.tag)}</div>
+    <div class="block-h">${ic("i-target")}Problems we solve</div>
+    <div class="probs">${l.problems.map(p=>`<div class="prob">${ic("i-target")}<span>${esc(p)}</span></div>`).join("")}</div>
+    <div class="block-h sol">${ic("i-spark")}Solutions that ship</div>
+    <ul class="sol">${l.solutions.map(([n,b])=>`<li><span class="mk">${ic("i-check")}</span>
+      <div><div class="nm">${esc(n)}</div><div class="bd">${esc(b)}</div></div></li>`).join("")}</ul>
+    <div class="block-h">${ic("i-users")}In your workflow</div>
+    <div class="wf-kpis">${l.workflow.kpis.map(([k,v])=>`<div><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("")}</div>
+    <div class="wf-rows">${l.workflow.rows.map(([id,ds,tag,av])=>`<div class="wf-row">
+      <span class="id">${esc(id)}</span><span class="ds">${esc(ds)}</span>
+      <span class="wf-tag ${tag}">${tag==="hi"?"High":tag==="md"?"Med":"Low"}</span>
+      <span class="wf-av">${esc(av)}</span></div>`).join("")}</div>
+    <div class="wf-foot">${ic("i-check",".875rem")}Reviewed and approved by your team — logged automatically</div>
+  </div>`;
 $("#spotlights").innerHTML=INDUSTRIES.map((d,i)=>`
   <section id="ind-${d.id}" class="spot${i%2?" sec-alt":""}">
     <div class="wrap spot-grid">
@@ -736,35 +834,24 @@ $("#spotlights").innerHTML=INDUSTRIES.map((d,i)=>`
         <h3 class="hl">${esc(d.headline)}</h3>
         <p class="blurb">${esc(d.blurb)}</p>
         <div class="outcomes">${d.outcomes.map(o=>`<span class="outcome">${ic("i-check")}${esc(o)}</span>`).join("")}</div>
+        <div class="lanes" role="tablist" aria-label="${esc(d.name)} solution areas">
+          ${d.lanes.map((l,j)=>`<button class="lane" role="tab" data-l="${l.id}" aria-selected="${j===0}">${esc(l.name)}<span class="c">${l.solutions.length}</span></button>`).join("")}
+        </div>
       </div>
       <div class="reveal"><div class="glass ships">
-        <div class="wf-tabs" role="tablist" aria-label="${esc(d.name)} views">
-          <button class="wf-tab" role="tab" data-k="solutions" aria-selected="true">Solutions that ship</button>
-          <button class="wf-tab" role="tab" data-k="workflow" aria-selected="false">${ic("i-users",".875rem")}&nbsp;In your workflow</button>
-        </div>
-        <div class="wf-panel on" data-k="solutions">
-          <ul>${d.useCases.map(([n,b])=>`<li><span class="mk">${ic("i-check")}</span>
-            <div><div class="nm">${esc(n)}</div><div class="bd">${esc(b)}</div></div></li>`).join("")}</ul>
-        </div>
-        <div class="wf-panel" data-k="workflow">
-          <div class="wf-kpis">${d.workflow.kpis.map(([k,v])=>`<div><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("")}</div>
-          <div class="wf-rows">${d.workflow.rows.map(([id,ds,tag,av])=>`<div class="wf-row">
-            <span class="id">${esc(id)}</span><span class="ds">${esc(ds)}</span>
-            <span class="wf-tag ${tag}">${tag==="hi"?"High":tag==="md"?"Med":"Low"}</span>
-            <span class="wf-av">${esc(av)}</span></div>`).join("")}</div>
-          <div class="wf-foot">${ic("i-check",".875rem")}Reviewed and approved by your team — logged automatically</div>
-        </div>
+        ${d.lanes.map((l,j)=>laneBody(l,j===0)).join("")}
       </div></div>
     </div>
   </section>`).join("");
 
-/* per-industry "Solutions / In your workflow" tab toggle (delegated — one
-   listener covers every spotlight card) */
+/* lane switcher — one delegated listener covers every spotlight. The lane
+   buttons (left column) and lane bodies (right column) share the section as
+   their common ancestor. */
 $("#spotlights").addEventListener("click",e=>{
-  const b=e.target.closest(".wf-tab");if(!b)return;
-  const card=b.closest(".ships");
-  card.querySelectorAll(".wf-tab").forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));
-  card.querySelectorAll(".wf-panel").forEach(p=>p.classList.toggle("on",p.dataset.k===b.dataset.k));
+  const b=e.target.closest(".lane");if(!b)return;
+  const sec=b.closest(".spot"),id=b.dataset.l;
+  sec.querySelectorAll(".lane").forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));
+  sec.querySelectorAll(".lane-body").forEach(p=>p.classList.toggle("on",p.dataset.l===id));
 });
 
 /* capability tabs */
